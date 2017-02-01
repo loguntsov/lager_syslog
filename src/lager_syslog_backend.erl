@@ -94,7 +94,7 @@ handle_event({log, Level, {_Date, _Time}, [_LevelStr, Location, Message]},
 handle_event({log, Message}, #state{level=Level,formatter=Formatter,format_config=FormatConfig} = State) ->
     case lager_util:is_loggable(Message, Level, State#state.id) of
         true ->
-            syslog:log(State#state.handle, convert_level(lager_msg:severity_as_int(Message)), [Formatter:format(Message, FormatConfig)]),
+            syslog:log(State#state.handle, convert_level(lager_msg:severity_as_int(Message)), [unicode:characters_to_binary(Formatter:format(Message, FormatConfig))]),
             {ok, State};
         false ->
             {ok, State}
